@@ -35,4 +35,6 @@ lerna-debug.log*
 
 .env
 key.json
+*.js
+*.d.ts
 ./key.json
