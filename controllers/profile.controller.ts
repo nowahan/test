@@ -9,13 +9,16 @@ import {Request, Response} from "express";
 class ProfileControllerClass {
     async getProfile(req: Request, res: Response) {
         let input = req.body as any;
-        const storage = new Storage({keyFilename: "./key.json"});
-        const options = {
-            destination: env.CHROME_DATA_PATH + input.file_name + '.zip',
-        };
-        await storage.bucket(env.BUCKET_NAME).file(input.file_name + '.zip').download(options);
-        const output = fs.createReadStream(env.CHROME_DATA_PATH + input.file_name + '.zip');
-        output.pipe(unzipper.Extract({ path: env.CHROME_DATA_PATH+ input.file_name  }));
+        if (input.force || !fs.existsSync(env.CHROME_DATA_PATH + input.file_name)) {
+            const storage = new Storage({keyFilename: "./key.json"});
+            const options = {
+                destination: env.CHROME_DATA_PATH + input.file_name + '.zip',
+            };
+            await storage.bucket(env.BUCKET_NAME).file(input.file_name + '.zip').download(options);
+            const output = fs.createReadStream(env.CHROME_DATA_PATH + input.file_name + '.zip');
+            output.pipe(unzipper.Extract({ path: env.CHROME_DATA_PATH+ input.file_name  }));
+        }
+
         responseOK(res);
     };
 
