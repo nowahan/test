@@ -5,7 +5,8 @@
     "prebuild": "rimraf dist",
     "prestart": "rimraf dist && tsc",
     "build": "rimraf dist && tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prod": "rimraf dist && tsc && pm2 start dist/index.js"
   },
   "dependencies": {
     "@google-cloud/storage": "^4.7.0",
