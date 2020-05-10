@@ -14,9 +14,12 @@ class ProfileControllerClass {
             const options = {
                 destination: env.CHROME_DATA_PATH + input.file_name + '.zip',
             };
-            await storage.bucket(env.BUCKET_NAME).file(input.file_name + '.zip').download(options);
-            const output = fs.createReadStream(env.CHROME_DATA_PATH + input.file_name + '.zip');
-            output.pipe(unzipper.Extract({ path: env.CHROME_DATA_PATH+ input.file_name  }));
+            let file = storage.bucket(env.BUCKET_NAME).file(input.file_name + '.zip');
+            if (await file.exists()){
+                await file.download(options);
+                const output = fs.createReadStream(env.CHROME_DATA_PATH + input.file_name + '.zip');
+                output.pipe(unzipper.Extract({ path: env.CHROME_DATA_PATH+ input.file_name  }));
+            }
         }
 
         responseOK(res);
